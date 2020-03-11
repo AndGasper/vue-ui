@@ -1,52 +1,34 @@
-const fs = require('fs');
+
 const path = require('path');
 const process = require('process');
+
+const { writeFileContents, makeDirectory, createFile, deleteDirectory } = require('./file-helpers');
 
 // input: node filename.js arg1 arg2 arg3
 // output: process.argv => [ 'node', 'path', 'arg1', 'arg2', 'arg3' ]
 
+
 /**
- * @name makeDirectory
- * @param {string} directoryName - the name of the directory
- * @description - Create a directory
+ * @name makeBoilerPlateComponentTypeDefinition
+ * @param {string} componentName - the name of the component
+ * @description - Create the generic typescript definition for the component
+ * @return {string} boilerPlateTypeDefinition - UTF-8 boilerplate type definition
  */
-function makeDirectory(path) {
-    return fs.mkdir(path, { recursive: false }, function(error) {
-        if (error) {
-            const { code } = error;
-            if (code === 'EEXIST') {
-                console.log('already exists');
-                return;
-            }
-            // throw error if couldn't if/else it away...
-            throw error;
-        }
-    });
+function makeBoilerPlateComponentTypeDefinition(componentName) {
+    const importStatements = `import * as Vue from 'vue';\nimport { StandardProps } from '..';`;
+    // templating...
+    const componentProps = `export interface ${componentName}Props\n\textends StandardProps<Vue.HTMLAttributes<HTMLDivElement>, ${componentName}ClassKey> {\n\t component?: Vue.ElementType<Vue.HTMLAttributes<HTMLDivElement>>;\n\t<morestuff>\n}`;
+    const componentClassKey = `export type ${componentName}Classkey = [<classKey>];`;
+    const componentDeclaration = `declare const ${componentName}: Vue.ComponentType<${componentName}Props>;`;
+    const exportComponent = `export default ${componentName};`;
+
+    const boilerPlateTypeDefinition = `${importStatements}\n\n${componentProps}\n\n${componentClassKey}\n\n${componentDeclaration}\n\n${exportComponent}`;
+
+    return boilerPlateTypeDefinition;
+
 }
 
-function createFile(path) {
-    return fs.writeFile(path, '', {
-        'encoding': 'utf8',
-        'mode': '0o666',
-        'flag': 'w'
-    }, function(error) {
-        console.error('uh oh!');
-        console.error(error);
-        // already exists
-        if (error.code === 'EEXIST') {
-            return;
-        }
-        throw error; 
-    });
-}
-/**
- * @name deleteDirectory
- * @param {string} path - Directory path
- * @description - Delete a directory's contents and the directory
- */
-function deleteDirectory(path) {
-    
-}
+
 /**
  * @name makeComponent
  * @description - Create the directory, create the <COMPONENT>.d.ts, create the index.d.ts
@@ -56,14 +38,31 @@ function makeComponent() {
         const componentName = process.argv[2];
         const currentWorkingDirectory = process.cwd();
         const directoryName = path.resolve(currentWorkingDirectory, 'packages', 'vue-ui', 'src', componentName);
-        const whatAmI = makeDirectory(directoryName);
-        const files = [ `${directoryName}/${componentName}.d.ts`, `${directoryName}/index.d.ts` ];
+        makeDirectory(directoryName);
+        const componentTypeDefinitionFile = `${directoryName}/${componentName}.d.ts`;
+        const files = [ componentTypeDefinitionFile, `${directoryName}/index.d.ts` ];
+        // touch the file. Probably wasteful to write empty and then write again. C'est la vie. 
         files.map((file) => createFile(file));
+        const componentTypeDefinitionSkeleton = makeBoilerPlateComponentTypeDefinition(componentName);
+        try {
+            writeFileContents(componentTypeDefinitionFile, componentTypeDefinitionSkeleton); 
+        } catch(error) {
+            console.error('writeFileContents error - oof.');
+            console.error(error);
+        }
+        
+
         // directory does not exist 
         
     } catch (error) {
         console.error('Uh oh!')
         console.error(error);
+        // if something went wrong-wrong delete the directory (bail)
+        try {
+            deleteDirectory(directoryName);
+        } catch(error) {
+            console.error('now you really dun goofed - error + deleteDirectory failed');
+        }
         // if the error 
     }
 }
@@ -73,5 +72,3 @@ function makeComponent() {
 
 
 makeComponent();
-
-
