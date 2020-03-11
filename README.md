@@ -103,3 +103,8 @@ links.forEach(function(link) {
 
 - `node ./packages/helpers/make-component.js SomeComponent`
 - `node ./packages/helpers/make-props-file.js` => just make the props file; don't feel like half-heartedly opening the "well, _what if_ the file does not exist?" can of worms.
+
+
+
+- Make a component: `node ./packages/helpers/make-component.js TestComponent`
+- FMSU - make all the components: `node ./packages/helpers/make-a-bunch-of-components.js`

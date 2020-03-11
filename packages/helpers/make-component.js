@@ -28,6 +28,19 @@ function makeBoilerPlateComponentTypeDefinition(componentName) {
 
 }
 
+/**
+ * @name makeBoilerPlateComponentIndex
+ * @param {string} componentName 
+ * @description - Create the index.d.ts boilerplate statements.
+ * @return {string} indexStatements - String version of index.d.ts
+ */
+function makeBoilerPlateComponentIndex(componentName) {
+    const exportDefaultStatement = `export { default } from './${componentName}';`;
+    const exportWildCardStatement = `export * from './${componentName}';`;
+    const indexStatements = `${exportDefaultStatement}\n${exportWildCardStatement}`;
+    return indexStatements;
+}
+
 
 /**
  * @name makeComponent
@@ -40,12 +53,16 @@ function makeComponent() {
         const directoryName = path.resolve(currentWorkingDirectory, 'packages', 'vue-ui', 'src', componentName);
         makeDirectory(directoryName);
         const componentTypeDefinitionFile = `${directoryName}/${componentName}.d.ts`;
-        const files = [ componentTypeDefinitionFile, `${directoryName}/index.d.ts` ];
+        const componentIndexFile = `${directoryName}/index.d.ts`;
+        const files = [ componentTypeDefinitionFile,  componentIndexFile ];
         // touch the file. Probably wasteful to write empty and then write again. C'est la vie. 
         files.map((file) => createFile(file));
         const componentTypeDefinitionSkeleton = makeBoilerPlateComponentTypeDefinition(componentName);
+        const componentIndexSkeleton = makeBoilerPlateComponentIndex(componentName);
         try {
-            writeFileContents(componentTypeDefinitionFile, componentTypeDefinitionSkeleton); 
+            // output the (spooky) skeletons
+            writeFileContents(componentTypeDefinitionFile, componentTypeDefinitionSkeleton);
+            writeFileContents(componentIndexFile, componentIndexSkeleton);
         } catch(error) {
             console.error('writeFileContents error - oof.');
             console.error(error);
