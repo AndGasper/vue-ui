@@ -1,0 +1,24 @@
+{
+    "compilerOptions": {
+        "module": "ESNext",
+        "target": "es5",
+        "lib": ["es6", "dom"],
+        "moduleResolution": "node",
+        "forceConsistentCasingInFileNames": true,
+        "strict": true,
+        "experimentalDecorators": true,
+        "baseUrl": "./",
+        "allowSyntheticDefaultImports": true,
+        "allowJs": true,
+        "paths": {
+            "@vue-ui/core": ["./packages/vue-ui/src"],
+            "@vue-ui/core/*": ["./packages/vue-ui/src/*"],
+            "@vue-ui/styles": ["./packages/vue-ui-styles/src/*"],
+            "@vue-ui/styles/*": ["./packages/vue-ui-styles/src/*"],
+            "@vue-ui/system": ["./packages/vue-ui-system/src"],
+            "@vue-ui/types": ["./packages/vue-ui-types"],
+            "test/*": ["./test/*"]
+        }
+    },
+    "exclude": ["**/build/"]
+}

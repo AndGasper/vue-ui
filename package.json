@@ -1,0 +1,9 @@
+{
+    "version": "1.0.0",
+    "scripts": {},
+    "author": "Dre",
+    "dependencies": {},
+    "devDependencies": {
+        "yarn": "^1.22.4"
+    }
+}

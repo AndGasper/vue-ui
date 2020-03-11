@@ -1,0 +1,42 @@
+{
+    "name": "@vue-ui/core",
+    "version": "1.0.0",
+    "private": false,
+    "author": "Dre",
+    "description": "VueJS components that implement Google's Material Design.",
+    "keywords": [
+        "vue",
+        "vuejs",
+        "VueJS",
+        "vue-component",
+        "material design",
+        "material-ui"
+    ],
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/AndGasper/vue-ui.git",
+        "directory": "packages/vue-ui"
+    },
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/AndGasper/vue-ui/issues"
+    },
+    "scripts": {
+        "build": "yarn build:cjs && yarn build:esm && yarn build:es && yarn build:umd && yarn build:copy-files",
+        "build:cjs": "",
+        "build:esm": "",
+        "build:es": "",
+        "build:umd": "",
+        "build:copy-files": "",
+        "prebuild": "",
+        "release": "",
+        "test": "",
+        "typescript": ""
+    },
+    "peerDependencies": {
+        "@types/vue": ""
+    },
+    "engines": {
+        "node": ">=8.0.0"
+    }
+}
